@@ -1,4 +1,4 @@
-_autosplitter = function () {
+_autosplitter = (function () {
 	var chestsInLevel = [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
 	var wrs = [
@@ -6,20 +6,20 @@ _autosplitter = function () {
 		"6.28",
 		"4.70",
 		"6.20",
-		"6.32",
+		"6.18",
 		"6.98",
 		"6.63",
 		"6.45",
 		"16.68",
 		"5.90",
-		"7.22",
+		"7.20",
 		"7.05",
 		"10.95",
 		"6.53",
-		"7.13"
+		"7.12",
 	];
 
-	var decimal_places_display = (window.tas_mode_active ? 3 : 2);
+	var decimal_places_display = window.tas_mode_active ? 3 : 2;
 
 	var state = {
 		speedrun_mode_active: false,
@@ -33,48 +33,61 @@ _autosplitter = function () {
 		speedrunTime: null,
 		transitionTime: null,
 		show_speedrun_stats: false,
-		extra_speedrun_stats_visible: false
-	}
+		extra_speedrun_stats_visible: false,
+	};
 
 	/*
 	Function to move between levels (for practice mode)
 	*/
 	var moveToLevel = function (level) {
 		window.game.ct(window.game.cd[level + 2]);
-	}
+	};
 
 	var isInSpeedrun = function () {
-		var speedrunning_var = window.game.$y.find(obj => obj.name === "IsSpeedRunning");
+		var speedrunning_var = window.game.$y.find(
+			(obj) => obj.name === "IsSpeedRunning"
+		);
 		return !!speedrunning_var && speedrunning_var.data == "true";
-	}
+	};
 
 	/*
 	Callback function after any sound file was played
 	*/
 	var onSound = function (soundName) {
-		console.log(soundName);
 		// Handling what happens when you collect chests
 		if (soundName == "damsel") {
 			state.damselCount += 1;
 
 			// Check if the last chest of the level was collected
-			if (state.in_level && state.damselCount >= chestsInLevel[state.level - 1]) {
+			if (
+				state.in_level &&
+				state.damselCount >= chestsInLevel[state.level - 1]
+			) {
 				state.in_transition = true;
 				state.transitionTime = 0;
-				$("#transition_timer").text((0).toFixed(decimal_places_display));
+				$("#transition_timer").text(
+					(0).toFixed(decimal_places_display)
+				);
 
 				// Track the time of the last level, before the transition started
 				if (state.speedrun_mode_active) {
-					_speedrunStatsHandler.onLevelEnd(state.level, state.levelTime);
+					_speedrunStatsHandler.onLevelEnd(
+						state.level,
+						state.levelTime
+					);
 				}
 			}
 		}
 
 		// Track extra stats for sounds. Only sounds that happened during gameplay are counted.
-		if (state.speedrun_mode_active && state.in_level && !state.in_transition) {
+		if (
+			state.speedrun_mode_active &&
+			state.in_level &&
+			!state.in_transition
+		) {
 			_speedrunStatsHandler.onSound(soundName);
 		}
-	}
+	};
 
 	/*
 	Callback function after any level layout is changed (we refresh or enter or a new screen)
@@ -87,9 +100,9 @@ _autosplitter = function () {
 		state.level = parseInt(sceneName.slice(5, 10));
 
 		// Check where we are now, based on the new layout name
-		state.in_menu = (sceneName === "Menu");
-		state.in_credits = (sceneName === "End");
-		state.in_level = (!state.in_menu && !state.in_credits);
+		state.in_menu = sceneName === "Menu";
+		state.in_credits = sceneName === "End";
+		state.in_level = !state.in_menu && !state.in_credits;
 		state.in_transition = false;
 
 		// If we entered a new level (or refreshed the current one)
@@ -98,8 +111,11 @@ _autosplitter = function () {
 
 			// Set relevant data for the current level
 			state.levelTime = 0;
-			document.getElementById("level_timer").innerText = (0).toFixed(decimal_places_display);
-			document.getElementById("level_wr").innerText = wrs[state.level - 1];
+			document.getElementById("level_timer").innerText = (0).toFixed(
+				decimal_places_display
+			);
+			document.getElementById("level_wr").innerText =
+				wrs[state.level - 1];
 
 			$("#level_select_message").css("visibility", "visible");
 
@@ -121,7 +137,7 @@ _autosplitter = function () {
 			}
 		}
 
-		state.speedrun_mode_active = (!state.in_menu && isInSpeedrun());
+		state.speedrun_mode_active = !state.in_menu && isInSpeedrun();
 		onSpeedrunModeChanged();
 
 		// Handling speedrun stats tracking, in case we are in speedrun mode
@@ -137,12 +153,18 @@ _autosplitter = function () {
 				// Check if a transition has ended. Will happen if the transition ended normally, or the player has reset during transition.
 				if (transitionEnded) {
 					// Track the time of the last transition
-					_speedrunStatsHandler.onTransitionEnd(previousLevel, state.transitionTime);
+					_speedrunStatsHandler.onTransitionEnd(
+						previousLevel,
+						state.transitionTime
+					);
 				}
 				// In case the player was not in transition. This will happen if the player dies or reset during a level.
 				else {
 					// Track the time of the last level
-					_speedrunStatsHandler.onLevelEnd(previousLevel, previousLevelTime);
+					_speedrunStatsHandler.onLevelEnd(
+						previousLevel,
+						previousLevelTime
+					);
 				}
 			}
 
@@ -154,7 +176,11 @@ _autosplitter = function () {
 		}
 
 		// Show stats for the last speedrun on the menu or credits, hide them during gameplay
-		$("#speedrun_stats").toggle(state.show_speedrun_stats && (state.in_menu || (state.in_credits && state.speedrun_mode_active)));
+		$("#speedrun_stats").toggle(
+			state.show_speedrun_stats &&
+				(state.in_menu ||
+					(state.in_credits && state.speedrun_mode_active))
+		);
 
 		if (state.in_level) {
 			hideExtraStats();
@@ -164,7 +190,7 @@ _autosplitter = function () {
 		if (window.tas_mode_active && state.in_level) {
 			window.coffee._onScene(state.level);
 		}
-	}
+	};
 
 	/*
 	Callback function for every tick of the main loop function of the game. Each tick equals one frame of the game.
@@ -174,28 +200,32 @@ _autosplitter = function () {
 		// Update the FPS counter for the current frame
 		$("#fps_counter").text((1 / frameTime).toFixed());
 
-
 		// Don't update timers on the menu or credits
 		if (!state.in_level) return;
 
 		// Update the level timer for the current frame if we are not in transition
 		if (!state.in_transition) {
 			state.levelTime += frameTime;
-			$("#level_timer").text(state.levelTime.toFixed(decimal_places_display));
+			$("#level_timer").text(
+				state.levelTime.toFixed(decimal_places_display)
+			);
 		}
 
 		// Only when we are in speedrun mode, update the speedrun and transition timers for the current frame
 		if (state.speedrun_mode_active) {
 			state.speedrunTime += frameTime;
-			$("#speedrun_timer").text(state.speedrunTime.toFixed(decimal_places_display));
+			$("#speedrun_timer").text(
+				state.speedrunTime.toFixed(decimal_places_display)
+			);
 
 			if (state.in_transition) {
 				state.transitionTime += frameTime;
-				$("#transition_timer").text(state.transitionTime.toFixed(decimal_places_display));
+				$("#transition_timer").text(
+					state.transitionTime.toFixed(decimal_places_display)
+				);
 			}
 		}
-	}
-
+	};
 
 	/**********
 	Window resize handling - organzing some of the custom HTML elements in case the window is resized, or full-screen mode is activated.
@@ -215,13 +245,19 @@ _autosplitter = function () {
 		var autosplitter_bar_height = $("#autosplitter_data").height();
 
 		$("#speedrun_stats")
-			.css("right", (canvas_marginLeft + 1) + "px")
-			.css("bottom", (canvas_marginTop + autosplitter_bar_height + 10) + "px");
+			.css("right", canvas_marginLeft + 1 + "px")
+			.css(
+				"bottom",
+				canvas_marginTop + autosplitter_bar_height + 10 + "px"
+			);
 
 		$("#extra_speedrun_stats")
-			.css("right", (canvas_marginLeft + 320) + "px")
-			.css("bottom", (canvas_marginTop + autosplitter_bar_height + 10) + "px");
-	}
+			.css("right", canvas_marginLeft + 320 + "px")
+			.css(
+				"bottom",
+				canvas_marginTop + autosplitter_bar_height + 10 + "px"
+			);
+	};
 
 	/**********
 	Speedrun mode handling - showing or hiding relevant information, based on whether we are in speedrun or practice mode.
@@ -230,8 +266,7 @@ _autosplitter = function () {
 	var onSpeedrunModeChanged = function () {
 		$("#speedrun_mode_data").toggle(state.speedrun_mode_active);
 		$("#practice_mode_data").toggle(!state.speedrun_mode_active);
-	}
-
+	};
 
 	/**********
 	Level movement handling - allowing to move between levels with the keyboard
@@ -252,7 +287,6 @@ _autosplitter = function () {
 		}
 	});
 
-
 	/**********
 	Speedrun stats modals handling
     ***********/
@@ -261,13 +295,13 @@ _autosplitter = function () {
 		state.extra_speedrun_stats_visible = true;
 		$("#extra_speedrun_stats").fadeIn();
 		$("#extra_stats_button_arrow").text(">");
-	}
+	};
 
 	hideExtraStats = function () {
 		state.extra_speedrun_stats_visible = false;
 		$("#extra_speedrun_stats").fadeOut();
 		$("#extra_stats_button_arrow").text("<");
-	}
+	};
 
 	$("#btn_extra_stats").mousedown(function (e) {
 		e.stopPropagation();
@@ -279,12 +313,11 @@ _autosplitter = function () {
 		}
 	});
 
-
 	return {
 		onSound: onSound,
 		onScene: onScene,
 		onUpdate: onUpdate,
 		onCanvasResize: onCanvasResize,
-		moveToLevel: moveToLevel
+		moveToLevel: moveToLevel,
 	};
-}();
+})();
