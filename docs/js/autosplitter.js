@@ -2,7 +2,7 @@ _autosplitter = (function () {
 	var chestsInLevel = [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
 	var wrs = [
-		"2.88",
+		"2.87",
 		"6.28",
 		"4.70",
 		"6.20",
@@ -10,13 +10,13 @@ _autosplitter = (function () {
 		"6.98",
 		"6.63",
 		"6.45",
-		"16.68",
+		"16.65",
 		"5.90",
 		"7.20",
 		"7.05",
 		"10.95",
 		"6.53",
-		"7.12",
+		"7.07",
 	];
 
 	var decimal_places_display = window.tas_mode_active ? 3 : 2;
