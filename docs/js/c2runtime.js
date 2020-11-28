@@ -10532,24 +10532,14 @@ function tc(e) {
 	p.T = new function () {}
 })();
 
+// This is the Kongregate plugin
 function uc(e) {
 	this.b = e
 }
 (function () {
-	function e() {
-		b = k.services.getUserId();
-		k.services.getUsername();
-		g.trigger(uc.prototype.j.wo, a)
-	}
+	function e() {}
 
-	function p() {
-		k = window.kongregateAPI.getAPI();
-		k.services.connect();
-		k.services.addEventListener("login", e);
-		b = k.services.getUserId();
-		k.services.getUsername();
-		0 < b && g.trigger(uc.prototype.j.wo, a)
-	}
+	function p() {}
 
 	function r() {}
 
@@ -10564,24 +10554,17 @@ function uc(e) {
 		g = null,
 		a = null,
 		b = 0;
-	q.L = function (b) {
-		this.type = b;
-		g = this.b = b.b;
-		a = this;
-		this.b.Ka || "undefined" === typeof window.kongregateAPI || window.kongregateAPI.loadAPI(p)
-	};
+	q.L = function (b) {};
 	var c = q.L.prototype;
 	c.H = function () {};
 	c.Fi = function () {
-		0 < b && g.trigger(uc.prototype.j.wo, a)
+		return true;
 	};
 	r.prototype.wo = function () {
-		return !0
+		return true;
 	};
 	q.j = new r;
-	t.prototype.Iy = function (a, b) {
-		k && k.stats.submit(a, b)
-	};
+	t.prototype.Iy = function (a, b) {};
 	q.D = new t;
 	q.T = new function () {}
 })();
