@@ -178,8 +178,8 @@ _autosplitter = (function () {
 		// Show stats for the last speedrun on the menu or credits, hide them during gameplay
 		$("#speedrun_stats").toggle(
 			state.show_speedrun_stats &&
-				(state.in_menu ||
-					(state.in_credits && state.speedrun_mode_active))
+			(state.in_menu ||
+				(state.in_credits && state.speedrun_mode_active))
 		);
 
 		if (state.in_level) {
@@ -257,6 +257,10 @@ _autosplitter = (function () {
 				"bottom",
 				canvas_marginTop + autosplitter_bar_height + 10 + "px"
 			);
+
+		$("#div_music_volume")
+			.css("right", canvas_marginLeft + "px")
+			.css("top", canvas_marginTop + "px");
 	};
 
 	/**********
