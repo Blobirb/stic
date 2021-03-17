@@ -3,7 +3,7 @@ _autosplitter = (function () {
 
 	var wrs = [
 		"2.56",
-		"5.85",
+		"5.83",
 		"4.59",
 		"5.99",
 		"5.80",
@@ -16,7 +16,7 @@ _autosplitter = (function () {
 		"6.93",
 		"10.93",
 		"6.23",
-		"6.03",
+		"6.00",
 	];
 
 	var decimal_places_display = window.tas_mode_active ? 3 : 2;
