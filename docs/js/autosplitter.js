@@ -1,25 +1,7 @@
 _autosplitter = (function () {
 	var chestsInLevel = [1, 1, 1, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2];
 
-	var wrs = [
-		"2.56",
-		"5.83",
-		"4.59",
-		"5.99",
-		"5.80",
-		"6.67",
-		"6.57",
-		"6.20",
-		"16.23",
-		"5.65",
-		"7.06",
-		"6.93",
-		"10.84",
-		"6.23",
-		"6.00",
-	];
-
-	var decimal_places_display = window.tas_mode_active ? 3 : 2;
+	var decimal_places_display = TAS_MODE ? 3 : 2;
 
 	var state = {
 		speedrun_mode_active: false,
@@ -111,11 +93,11 @@ _autosplitter = (function () {
 
 			// Set relevant data for the current level
 			state.levelTime = 0;
-			document.getElementById("level_timer").innerText = (0).toFixed(
-				decimal_places_display
-			);
-			document.getElementById("level_wr").innerText =
-				wrs[state.level - 1];
+			document.getElementById("level_timer").innerText = (0).toFixed(decimal_places_display);
+			
+			wrTimes = _wrs.getTimes();
+			$("#level_wr_title").text(wrTimes.title);
+			$("#level_wr").text(wrTimes.wrs[state.level - 1]);
 
 			$("#level_select_message").css("visibility", "visible");
 
@@ -187,7 +169,7 @@ _autosplitter = (function () {
 		}
 
 		// Handling TAS mode - notifying the TAS tool on entering a new level
-		if (window.tas_mode_active && state.in_level) {
+		if (TAS_MODE && state.in_level) {
 			window.coffee._onScene(state.level);
 		}
 	};
